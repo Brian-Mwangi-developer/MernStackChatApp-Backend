@@ -4,7 +4,7 @@ const userRoutes =require('./routes/userRoutes');
 const User =require("./models/User")
 const Message =require("./models/Messages");
 
-const rooms =['general','finance','Medical'];
+const rooms =["general","Finance","Medical"];
 const cors = require ('cors');
 // const { socket } = require('socket.io');
 
@@ -23,6 +23,10 @@ const io = require("socket.io")(server,{
         origin:'http://localhost:5173',
         methods:['GET','POST']
     }
+})
+
+app.get('/rooms', (req,res)=> {
+    res.json(rooms);
 })
 
 //get previous rooms message
@@ -70,7 +74,7 @@ io.on('connection',(socket) =>{
         //sending message to room
         io.to(room).emit('room-messages',roomMessages);
     
-        socket.broadcast.emit('notification',room)
+        socket.broadcast.emit('notifications',room)
     })
     app.delete("/logout", async(req,res)=>{
         try{
@@ -89,10 +93,6 @@ io.on('connection',(socket) =>{
     })
 })
 
-
-app.get('/rooms', (req,res)=> {
-    res.json(rooms);
-})
 
 server.listen(PORT,()=>{
     console.log('listening on port',PORT);
